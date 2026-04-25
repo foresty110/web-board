@@ -29,11 +29,12 @@
 
 <h1>게시판 등록</h1>
 <form action="/board/free/write" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="command" value="write">
   <table>
     <tr>
       <th><label for="category">카테고리</label></th>
       <td>
-        <select id="category" required >
+          <select id="category" required >
           <option value="">카테고리 선택</option>
           <option value="JAVA">JAVA</option>
           <option value="JAVASCRIPT">JAVASCRIPT</option>

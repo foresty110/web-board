@@ -16,8 +16,8 @@
 
     ConnectionTest t = new ConnectionTest();
     out.println(t.getConnection());
+    response.sendRedirect(request.getContextPath() + "/board/free/list");
 
 %>
-
 </body>
 </html>
