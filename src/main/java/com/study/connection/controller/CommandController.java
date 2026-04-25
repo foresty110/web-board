@@ -1,8 +1,8 @@
 package com.study.connection.controller;
 
-import com.study.connection.handler.BoardListCommand;
-import com.study.connection.handler.CommandHandler;
-import com.study.connection.handler.BoardWriteCommand;
+import com.study.connection.command.BoardListCommandImpl;
+import com.study.connection.command.BoardCommand;
+import com.study.connection.command.BoardWriteCommandImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -38,14 +38,14 @@ public class CommandController extends HttpServlet {
         // 실제 경로만 추출
         String path = uri.substring(contextPath.length());
 
-        CommandHandler command = null;
+        BoardCommand command = null;
         String viewPage = null;
 
         // 페이지 연결
         if (path.equals("list")) {
-            command = new BoardListCommand(); //게시글 생성 페이지
+            command = new BoardListCommandImpl(); //게시글 생성 페이지
         } else if (path.equals("write")) { //게시글 목록 페이지
-             command = new BoardWriteCommand();
+             command = new BoardWriteCommandImpl();
         }
 
         // 비즈니스 로직 실행
