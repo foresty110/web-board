@@ -1,10 +1,15 @@
 package com.study.connection.command;
 
+import com.study.connection.dao.CategoryDaoImpl;
+import com.study.connection.dao.PostDaoImpl;
+import com.study.connection.dto.CategoryDto;
+import com.study.connection.dto.PostDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 public class BoardListCommandImpl implements BoardCommand {
     @Override
@@ -15,9 +20,13 @@ public class BoardListCommandImpl implements BoardCommand {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
 
-        // JSP로 보낼 데이터 담기
-        String[] test = {"사과", "포도", "오렌지"};
-        request.setAttribute("categoryList", test);
+        // DAO를 통해 데이터 가져오기
+        List<PostDto> postList = PostDaoImpl.getPostDao().selectAllPosts();
+        List<CategoryDto> categoryDtoList = CategoryDaoImpl.getCategoryDao().selectAllCategories();
+
+        // JSP에 데이터 전달
+        request.setAttribute("boardList", postList);
+        request.setAttribute("categoryList", categoryDtoList);
 
         return "/list.jsp"; // 게시판 목록 페이지
     }
