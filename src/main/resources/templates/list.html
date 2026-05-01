@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>자유게시판 - 목록</title>
+
+    <style>
+        table {
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+
+<h1>자유게시판 - 목록</h1>
+
+<form action="/board/free/list" method="get">
+    <label for="start_date">등록일</label>
+    <input type="date" id="start_date" name="startDate" title="등록일 기간" th:value="${startDate}">
+    <span>~</span>
+    <input type="date" id="end_date" name="endDate" title="등록일 기간" th:value="${endDate}">
+
+    <select id="category" name="category" title="카테고리 선택">
+        <option value="">전체 카테고리</option>
+        <option th:each="category : ${categoryList}"
+                th:value="${category.name}"
+                th:text="${category.name}"
+                th:selected="${category.name == selectedCategory}">
+        </option>
+    </select>
+
+    <input type="text" name="keyword" title="검색어 입력"
+           placeholder="검색어를 입력해 주세요. (제목+작성자+내용)"
+           th:value="${keyword}">
+    <button type="submit">검색</button>
+</form>
+
+<p th:text="'총 ' + ${totalCount} + '건'">총 0건</p>
+
+<table>
+    <thead>
+    <tr>
+        <th style="width: 100px;">카테고리</th>
+        <th style="width: 500px;">제목</th>
+        <th style="width: 100px;">작성자</th>
+        <th style="width: 100px;">조회수</th>
+        <th style="width: 100px;">등록 일시</th>
+        <th style="width: 100px;">수정 일시</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="board : ${boardList}">
+        <td th:text="${board.categoryName}">카테고리</td>
+        <td th:text="${board.title}">제목</td>
+        <td th:text="${board.author}">작성자</td>
+        <td th:text="${board.viewCount}">0</td>
+        <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm')}">2024-01-01</td>
+        <td th:text="${#temporals.format(board.updatedAt, 'yyyy-MM-dd HH:mm')}">2024-01-01</td>
+    </tr>
+
+    <!-- 데이터가 없을 때 -->
+    <tr th:if="${#lists.isEmpty(boardList)}">
+        <td colspan="6" style="text-align: center;">등록된 게시글이 없습니다.</td>
+    </tr>
+    </tbody>
+</table>
+
+<button type="button" th:onclick="'location.href=\'/board/free/write\''">등록</button>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // 오늘 날짜를 YYYY-MM-DD 형식으로 만들기
+    const today = new Date().toISOString().split('T')[0];
+
+    // 서버에서 값이 안 온 경우에만 오늘 날짜로 설정
+    if (!document.getElementById('start_date').value) {
+        document.getElementById('start_date').value = today;
+    }
+    if (!document.getElementById('end_date').value) {
+        document.getElementById('end_date').value = today;
+    }
+    /*]]>*/
+</script>
+
+</body>
+</html>
