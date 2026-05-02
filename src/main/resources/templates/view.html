@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>게시판 - 보기</title>
+    <style>
+        .container { width: 800px; margin: 20px auto; font-family: sans-serif; }
+        .header-info { display: flex; justify-content: space-between; border-bottom: 1px solid #ccc; padding: 10px 0; font-size: 14px; }
+        .title-area { margin: 15px 0; padding: 10px 0; border-bottom: 2px solid #333; }
+        .content-box { border: 1px solid #eee; min-height: 200px; padding: 15px; margin: 20px 0; white-space: pre-wrap; line-height: 1.6; }
+        .comment-section { background-color: #f9f9f9; padding: 20px; border-top: 1px solid #ddd; }
+        .comment-item { border-bottom: 1px dashed #ccc; padding: 10px 0; }
+        .comment-date { font-size: 12px; color: #888; }
+        .btn-group { text-align: center; margin-top: 30px; }
+        button { padding: 8px 20px; cursor: pointer; margin: 0 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>게시판 - 보기</h1>
+
+    <!-- 상단 정보 영역 -->
+    <div class="header-info">
+        <div th:text="${board.author}">작성자</div>
+        <div>
+            <span>등록일시: <span th:text="${#temporals.format(board.createdAt, 'yyyy.MM.dd HH:mm')}"></span></span>
+            <span th:if="${board.updatedAt != null}" style="margin-left: 15px;">
+                수정일시: <span th:text="${#temporals.format(board.updatedAt, 'yyyy.MM.dd HH:mm')}"></span>
+            </span>
+        </div>
+    </div>
+
+    <!-- 제목 영역 -->
+    <div class="title-area">
+        <span th:text="'[' + ${board.categoryName} + '] '" style="font-weight: bold; color: #007bff;"></span>
+        <span th:text="${board.title}" style="font-size: 18px; font-weight: bold;">제목</span>
+        <span style="float: right; color: #666;" th:text="'조회수: ' + ${board.viewCount}">조회수: 0</span>
+    </div>
+
+    <!-- 본문 내용 -->
+    <div class="content-box" th:text="${board.content}">내용이 출력됩니다.</div>
+
+    <!-- 댓글 영역 -->
+    <div class="comment-section">
+        <h3>댓글</h3>
+        <div th:each="comment : ${comments}" class="comment-item">
+            <div class="comment-date">
+                <span th:text="${comment.author}">작성자</span> |
+                <span th:text="${#temporals.format(comment.createdAt, 'yyyy.MM.dd HH:mm')}"></span>
+            </div>
+            <div th:text="${comment.content}" style="margin-top: 5px;">댓글 내용</div>
+        </div>
+
+        <!-- 댓글 입력 폼 -->
+        <form th:action="@{/board/free/view/{id}/comment(id=${board.id})}" method="post" style="margin-top: 20px; display: flex;">
+            <textarea name="content" style="flex: 1; height: 60px; padding: 10px;" placeholder="댓글을 입력해 주세요." required></textarea>
+            <button type="submit" style="margin-left: 10px; height: 60px; width: 80px;">등록</button>
+        </form>
+    </div>
+
+    <!-- 하단 버튼 -->
+    <div class="btn-group">
+        <button type="button" th:onclick="|location.href='/board/free/list'|">목록</button>
+        <button type="button" th:onclick="|location.href='/board/free/edit/' + ${board.id}|">수정</button>
+        <button type="button" th:onclick="'confirmDelete(' + ${board.id} + ')'">삭제</button>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    function confirmDelete(id) {
+        if (confirm("정말 삭제하시겠습니까?")) {
+            location.href = "/board/free/delete/" + id;
+        }
+    }
+</script>
+
+</body>
+</html>
