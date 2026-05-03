@@ -1,19 +1,19 @@
 package com.study.connection.dto;
 
+import com.study.connection.entity.Category;
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
 public class CategoryDto {
-    private int id;
+    private Long id;
     private String name;
 
-    public CategoryDto() {}
-
-    public CategoryDto(int id, String name) {
-        this.id = id;
-        this.name = name;
+    public static CategoryDto from(Category entity) {
+        return CategoryDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .build();
     }
-
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
 }
